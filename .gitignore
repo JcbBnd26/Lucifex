@@ -1,0 +1,101 @@
+# ============================================================================
+# Section 1 — Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+develop-eggs/
+downloads/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.ruff_cache/
+.mypy_cache/
+
+# ============================================================================
+# Section 2 — Virtual environments
+# ============================================================================
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.local
+.env.*.local
+
+# ============================================================================
+# Section 3 — Node / Frontend
+# ============================================================================
+node_modules/
+.next/
+out/
+dist/
+.turbo/
+.vercel/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ============================================================================
+# Section 4 — IDE and editor files
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================================
+# Section 5 — Operational outputs
+# ============================================================================
+output/
+!output/README.md
+logs/
+*.log
+tmp/
+temp/
+
+# ============================================================================
+# Section 6 — Secrets and credentials
+# ============================================================================
+*.pem
+*.key
+*.crt
+secrets/
+credentials/
+.secret
+.secrets
+
+# ============================================================================
+# Section 7 — Database and storage
+# ============================================================================
+*.sqlite
+*.sqlite3
+*.db
+local_storage/
