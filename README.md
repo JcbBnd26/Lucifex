@@ -24,7 +24,7 @@ For the full architecture and decision history, see:
 
 ## Sister Project
 
-Lucifex is part of the Project Money portfolio alongside [Nom de Plume](https://github.com/JcbBnd26/Nom-de-plume), which is a production system for AI-authored fiction.
+Lucifex is part of a portfolio alongside [Nom de Plume](https://github.com/JcbBnd26/Nom-de-plume), which is a production system for AI-authored fiction.
 
 ## Status
 
