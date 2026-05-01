@@ -99,3 +99,20 @@ credentials/
 *.sqlite3
 *.db
 local_storage/
+
+# ============================================================================
+# Section 8 — Python build artifacts
+# ============================================================================
+*.egg-info/
+.eggs/
+src/*.egg-info/
+backend/src/*.egg-info/
+
+# ============================================================================
+# Section 9 — Tool caches added in Chunk C
+# ============================================================================
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/

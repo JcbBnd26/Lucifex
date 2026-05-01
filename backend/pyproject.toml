@@ -1,0 +1,223 @@
+# ============================================================================
+# Lucifex — Backend Package Configuration
+# ============================================================================
+# This file declares the Lucifex Python package, its dependencies, dev
+# dependencies, and the configuration for ruff, mypy, and pytest.
+#
+# Single source of truth: this file. No setup.py, no requirements.txt,
+# no separate ruff/mypy config files. Everything lives here.
+# ============================================================================
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# ============================================================================
+# Project metadata
+# ============================================================================
+
+[project]
+name = "lucifex"
+description = "Autonomous content production system. Commercial Grade Apps for Personal Use."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = { text = "Proprietary" }
+authors = [
+    { name = "Jake" }
+]
+keywords = ["ai", "video", "automation", "content"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+]
+dynamic = ["version"]
+
+# ----------------------------------------------------------------------------
+# Runtime dependencies
+# ----------------------------------------------------------------------------
+# These are installed in production. Keep this list lean — every dependency
+# is a security and maintenance liability. Pin to compatible ranges, not
+# exact versions, so security patches flow through.
+# ----------------------------------------------------------------------------
+
+dependencies = [
+    # Web framework
+    "fastapi>=0.115,<0.117",
+    "uvicorn[standard]>=0.32,<0.36",
+
+    # Settings and validation
+    "pydantic>=2.9,<3.0",
+    "pydantic-settings>=2.6,<3.0",
+
+    # Database
+    "sqlalchemy>=2.0,<3.0",
+    "alembic>=1.13,<2.0",
+    "asyncpg>=0.30,<0.31",
+    "psycopg[binary]>=3.2,<4.0",
+
+    # Auth and crypto
+    "bcrypt>=4.2,<5.0",
+    "cryptography>=43,<46",
+    "python-jose[cryptography]>=3.3,<4.0",
+
+    # Observability
+    "structlog>=24.4,<26.0",
+    "sentry-sdk[fastapi]>=2.18,<3.0",
+
+    # Job queue
+    "arq>=0.26,<1.0",
+
+    # HTTP client (for provider/platform adapters)
+    "httpx>=0.28,<1.0",
+]
+
+# ----------------------------------------------------------------------------
+# Optional dependency groups
+# ----------------------------------------------------------------------------
+# Installed only when explicitly requested. The "dev" group is what you
+# install locally; the "test" group is what CI installs.
+# ----------------------------------------------------------------------------
+
+[project.optional-dependencies]
+dev = [
+    # Code quality
+    "ruff>=0.8,<1.0",
+    "mypy>=1.13,<2.0",
+
+    # Testing
+    "pytest>=8.3,<9.0",
+    "pytest-asyncio>=0.24,<2.0",
+    "pytest-cov>=6.0,<8.0",
+    "httpx>=0.28,<1.0",  # used in test client
+
+    # Type stubs
+    "types-python-jose>=3.3,<4.0",
+]
+
+test = [
+    "pytest>=8.3,<9.0",
+    "pytest-asyncio>=0.24,<2.0",
+    "pytest-cov>=6.0,<8.0",
+    "httpx>=0.28,<1.0",
+]
+
+# ============================================================================
+# Hatch (build backend) configuration
+# ============================================================================
+
+[tool.hatch.version]
+path = "src/lucifex/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lucifex"]
+
+# ============================================================================
+# Ruff (linter + formatter) configuration
+# ============================================================================
+# Ruff replaces flake8, black, isort, and pyupgrade in a single fast tool.
+# ============================================================================
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+# Selected rule sets:
+#   E, W   — pycodestyle (PEP 8 errors and warnings)
+#   F      — pyflakes (unused imports, undefined names)
+#   I      — isort (import sorting)
+#   B      — flake8-bugbear (likely bugs)
+#   C4     — flake8-comprehensions (better list/dict comprehensions)
+#   UP     — pyupgrade (modern Python idioms)
+#   N      — pep8-naming
+#   SIM    — flake8-simplify
+#   RUF    — ruff-specific rules
+select = ["E", "W", "F", "I", "B", "C4", "UP", "N", "SIM", "RUF"]
+ignore = [
+    "E501",  # line too long — formatter handles this
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]  # assert is fine in tests
+"__init__.py" = ["F401"]    # unused imports are fine in __init__
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+# ============================================================================
+# Mypy (type checker) configuration
+# ============================================================================
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+no_implicit_optional = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+
+# Migrations are auto-generated; we don't type-check them.
+[[tool.mypy.overrides]]
+module = "lucifex.db.migrations.*"
+ignore_errors = true
+
+# Third-party libraries without type stubs.
+[[tool.mypy.overrides]]
+module = ["arq.*"]
+ignore_missing_imports = true
+
+# ============================================================================
+# Pytest configuration
+# ============================================================================
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "-ra",                         # show short test summary for all but passes
+    "--strict-markers",            # error on unknown @pytest.mark
+    "--strict-config",             # error on unknown config
+    "--cov=lucifex",               # measure coverage of the lucifex package
+    "--cov-report=term-missing",   # show uncovered lines in terminal
+]
+asyncio_mode = "auto"
+markers = [
+    "unit: fast isolated tests",
+    "integration: tests that use real infrastructure (DB, storage)",
+    "e2e: full end-to-end flows",
+    "slow: tests that take longer than 1 second",
+]
+
+# ============================================================================
+# Coverage configuration
+# ============================================================================
+
+[tool.coverage.run]
+source = ["src/lucifex"]
+omit = [
+    "*/migrations/*",
+    "*/__main__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]

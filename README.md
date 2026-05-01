@@ -29,3 +29,14 @@ Lucifex is part of a portfolio alongside [Nom de Plume](https://github.com/JcbBn
 ## Status
 
 This project is in initial scaffold. No functional code yet.
+
+## Development
+
+This project is in early scaffold. To work on the backend locally, see [`backend/README.md`](backend/README.md).
+
+Required:
+- Python 3.12 (pinned in `.python-version`)
+- A virtual environment per backend setup instructions
+- Editable install (`pip install -e ".[dev]"`) from the `backend/` directory
+
+The frontend is not yet scaffolded with tooling — that comes in a later chunk.
