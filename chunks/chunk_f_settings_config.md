@@ -1,5 +1,7 @@
 # Chunk F — Lucifex Settings & Config
 
+> **Authorship note.** This chunk document was written by the coding agent (GitHub Copilot) rather than by the planning agent (claude.ai). The PA was unavailable due to token limits, so for Chunk F the coding agent both planned and executed the work, then wrote this document after the fact. As a result, the format follows the established Chunk D / Chunk E template but the "What was actually done" section reflects real execution rather than a forward plan.
+
 You are working in the Lucifex project repository. Chunks A–C established the foundation, folder scaffold, and Python environment. Chunk D scaffolded the database (declarative base, mixins, async session, `users` + `sessions` models, first Alembic migration). Chunk E added the auth crypto primitives (`hash_password`, `verify_password`, `needs_rehash`, `generate_session_token`, `hash_session_token`, `constant_time_compare`) and the project's first real unit tests.
 
 Chunk F introduces a typed application settings layer. All `LUCIFEX_*` environment variables are now loaded once into a single immutable `Settings` instance (via `pydantic-settings`), validated at load time. The Alembic environment was rewired to use this same settings object, so there is now exactly one place in the codebase that reads environment variables.
