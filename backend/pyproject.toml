@@ -61,6 +61,7 @@ dependencies = [
 
     # Auth and crypto
     "bcrypt>=4.2,<5.0",
+    "argon2-cffi>=23.1,<26.0",
     "cryptography>=43,<46",
     "python-jose[cryptography]>=3.3,<4.0",
 
