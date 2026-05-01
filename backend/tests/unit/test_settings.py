@@ -9,9 +9,10 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 import pytest
-from lucifex.config import Settings, get_settings
 from pydantic import ValidationError
 from pydantic_core import ValidationError as CoreValidationError
+
+from lucifex.config import Settings, get_settings
 
 pytestmark = pytest.mark.unit
 
@@ -55,9 +56,7 @@ def test_settings_loads_from_env_with_prefix(monkeypatch: pytest.MonkeyPatch) ->
 
 
 def test_database_url_must_use_asyncpg_driver(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv(
-        "LUCIFEX_DATABASE_URL", "postgresql://user:pass@localhost:5432/lucifex_test"
-    )
+    monkeypatch.setenv("LUCIFEX_DATABASE_URL", "postgresql://user:pass@localhost:5432/lucifex_test")
     monkeypatch.setenv("LUCIFEX_ENCRYPTION_KEY", _VALID_KEY)
 
     with pytest.raises(ValidationError, match="asyncpg"):
@@ -128,7 +127,5 @@ def test_settings_is_frozen(monkeypatch: pytest.MonkeyPatch) -> None:
     _set_required_env(monkeypatch)
     settings = Settings()
 
-    with pytest.raises(
-        (ValidationError, CoreValidationError, TypeError, AttributeError)
-    ):
+    with pytest.raises((ValidationError, CoreValidationError, TypeError, AttributeError)):
         settings.env = "production"  # type: ignore[misc]
