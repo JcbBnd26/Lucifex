@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from lucifex.auth.passwords import hash_password, needs_rehash, verify_password
 
 pytestmark = pytest.mark.unit

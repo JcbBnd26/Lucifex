@@ -107,9 +107,7 @@ class Session(Base, IdMixin, TimestampMixin):
     )
 
     # Token storage — hash only, never plaintext.
-    session_token_hash: Mapped[str] = mapped_column(
-        String(255), nullable=False, unique=True
-    )
+    session_token_hash: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
 
     # Lifecycle
     expires_at: Mapped[datetime] = mapped_column(nullable=False)

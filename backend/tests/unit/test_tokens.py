@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 import pytest
+
 from lucifex.auth.tokens import (
     SESSION_TOKEN_BYTES,
     constant_time_compare,

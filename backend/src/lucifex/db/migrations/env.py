@@ -11,10 +11,12 @@ engine, which matches how the application connects in production.
 from __future__ import annotations
 
 import asyncio
-import os
 from logging.config import fileConfig
 
+import lucifex.db.models  # noqa: F401  # registers all models
 from alembic import context
+from lucifex.config import get_settings
+from lucifex.db.base import Base
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
@@ -27,8 +29,6 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 # line, Alembic autogenerate would see an empty metadata object.
 # ---------------------------------------------------------------------------
 
-from lucifex.db.base import Base
-import lucifex.db.models  # noqa: F401  # registers all models
 
 # ---------------------------------------------------------------------------
 # Alembic config
@@ -50,23 +50,18 @@ target_metadata = Base.metadata
 
 
 def get_database_url() -> str:
-    """Read the database URL from environment.
+    """Return the database URL from typed settings.
 
-    Required: LUCIFEX_DATABASE_URL.
-
-    Expected format: postgresql+asyncpg://user:pass@host:port/dbname
+    Delegates to `lucifex.config.get_settings()`. A missing
+    `LUCIFEX_DATABASE_URL`, an invalid driver, or any other configuration
+    error surfaces here as a `pydantic.ValidationError`, before Alembic
+    attempts a connection.
 
     The +asyncpg driver is required because the application uses async
     sessions throughout. Migrations run through the same async engine to
     match production connection behavior.
     """
-    url = os.getenv("LUCIFEX_DATABASE_URL")
-    if not url:
-        raise RuntimeError(
-            "LUCIFEX_DATABASE_URL is not set. Configure it in your "
-            "environment or .env file before running migrations."
-        )
-    return url
+    return str(get_settings().database_url)
 
 
 # ---------------------------------------------------------------------------
